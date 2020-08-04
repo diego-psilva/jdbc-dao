@@ -58,20 +58,82 @@ public class DepartmentDaoJDBC implements DepartamentDao{
 
 	@Override
 	public void update(Department obj) {
-		// TODO Auto-generated method stub
+		
+		PreparedStatement st = null;
+		
+		try {
+			st = conn.prepareStatement(
+					"UPDATE department " + 
+					"SET Name = ? " + 
+					"WHERE id = ?;");
+			
+			st.setString(1, obj.getName());
+			st.setInt(2, obj.getId());
+			
+			st.executeUpdate();
+			
+		}catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}finally {
+			DB.closeStatement(st);
+		}
 		
 	}
 
 	@Override
 	public void deleteById(Integer id) {
-		// TODO Auto-generated method stub
 		
+		PreparedStatement st = null;
+		
+		try {
+			st = conn.prepareStatement(
+					"DELETE FROM department " + 
+					"WHERE Id = ?;");
+			
+			st.setInt(1, id);
+			
+			int rows = st.executeUpdate();
+			
+			if (rows==0) {
+				throw new DbException("Inexpected error: no rows deleted");
+			}
+		}catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}finally {
+			DB.closeStatement(st);
+		}
 	}
 
 	@Override
 	public Department findById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement st = null;
+		ResultSet rs =  null;
+		
+		try {
+			st = conn.prepareStatement("SELECT * " + 
+					"FROM department " + 
+					"WHERE id = ?;");
+			
+			st.setInt(1, id);
+			
+			rs = st.executeQuery();
+			
+			rs.next();
+			Department dep = new Department(
+					rs.getInt("Id"), 
+					rs.getString("Name"));
+			
+			return dep;
+		
+		}catch (SQLException e) {
+			throw new DbException (e.getMessage());
+		
+		}finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
+		}
+		
+		
 	}
 
 	@Override
