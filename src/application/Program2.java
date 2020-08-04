@@ -1,5 +1,7 @@
 package application;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import model.dao.DaoFactory;
@@ -29,10 +31,16 @@ public class Program2 {
 		System.out.println("Enter department id for delete");
 		depDao.deleteById(sc.nextInt());
 		System.out.println("Done! Department deleted");
-*/		
+		
 		System.out.println("\n=== Test 4: department findById ===");
 		Department dep = depDao.findById(2);
 		System.out.println(dep);
+*/		
+		System.out.println("\n=== Test 5: department findAll ===");
+		List<Department> list = new ArrayList<>();
+		list = depDao.findAll();
+		list.forEach(System.out::println);
+		
 		
 		
 		
